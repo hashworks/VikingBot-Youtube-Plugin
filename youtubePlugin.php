@@ -11,7 +11,7 @@ class youtubePlugin extends basePlugin {
 	 * @param string $msg
 	 */
 	public function onMessage($from, $channel, $msg) {
-		preg_match_all("/http[s]{0,1}:\/\/(?:www\.){0,1}youtu(?:\.be\/[a-z0-9]+|be\.com\/watch[?&=a-z0-9]+)/i", $msg, $matches);
+		preg_match_all("/http[s]{0,1}:\/\/(?:www\.){0,1}youtu(?:\.be\/[-a-z0-9]+|be\.com\/watch[?&=-a-z0-9]+)/i", $msg, $matches);
 		$matches = array_splice($matches[0], 0, 5);
 		foreach ($matches as $link) {
 			$title = $this->getYoutubeTitle($link);
@@ -24,7 +24,7 @@ class youtubePlugin extends basePlugin {
 	private function getYoutubeTitle($link) {
 		$data = @file_get_contents('http://www.youtube.com/oembed?url=' . $link . '&format=json');
 		if (!empty($data) && ($data = json_decode($data, true)) !== NULL) {
-			if (isset($data['title']) && isset($data['title'])) {
+			if (isset($data['title']) && !empty($data['title'])) {
 				return $data['title'];
 			}
 		}
